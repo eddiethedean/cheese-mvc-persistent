@@ -1,5 +1,6 @@
 package org.launchcode.controllers;
 
+import org.launchcode.models.Category;
 import org.launchcode.models.data.CategoryDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,12 +23,14 @@ public class CategoryController {
     }
 
     @RequestMapping(value = "add")
-    public String add() {
+    public String add(Model viewBag) {
+        viewBag.addAttribute("title", "Add Category");
+        viewBag.addAttribute("category", new Category());
         return "category/add";
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
-    public String add(Model viewBag) {
+    public String add() {
         return "";
     }
 }
