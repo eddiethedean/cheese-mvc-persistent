@@ -1,8 +1,8 @@
 package org.launchcode.controllers;
 
 import org.launchcode.models.Cheese;
-import org.launchcode.models.CheeseType;
-import org.launchcode.models.data.CheeseDao;
+import org.launchcode.models.data.CategoryDAO;
+import org.launchcode.models.data.CheeseDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,13 +22,16 @@ import javax.validation.Valid;
 public class CheeseController {
 
     @Autowired
-    private CheeseDao cheeseDao;
+    private CheeseDAO cheeseDAO;
+
+    @Autowired
+    private CategoryDAO categoryDAO;
 
     // Request path: /cheese
     @RequestMapping(value = "")
     public String index(Model model) {
 
-        model.addAttribute("cheeses", cheeseDao.findAll());
+        model.addAttribute("cheeses", cheeseDAO.findAll());
         model.addAttribute("title", "My Cheeses");
 
         return "cheese/index";
@@ -38,26 +41,27 @@ public class CheeseController {
     public String displayAddCheeseForm(Model model) {
         model.addAttribute("title", "Add Cheese");
         model.addAttribute(new Cheese());
-        model.addAttribute("cheeseTypes", CheeseType.values());
+        model.addAttribute("categories", categoryDAO.findAll());
         return "cheese/add";
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public String processAddCheeseForm(@ModelAttribute  @Valid Cheese newCheese,
-                                       Errors errors, Model model) {
+                                       Errors errors, Model model, @RequestParam int categoryId) {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Cheese");
+            model.addAttribute("categories", categoryDAO.findAll());
             return "cheese/add";
         }
-
-        cheeseDao.save(newCheese);
+        newCheese.setCategory(categoryId, categoryDAO);
+        cheeseDAO.save(newCheese);
         return "redirect:";
     }
 
     @RequestMapping(value = "remove", method = RequestMethod.GET)
     public String displayRemoveCheeseForm(Model model) {
-        model.addAttribute("cheeses", cheeseDao.findAll());
+        model.addAttribute("cheeses", cheeseDAO.findAll());
         model.addAttribute("title", "Remove Cheese");
         return "cheese/remove";
     }
@@ -66,7 +70,7 @@ public class CheeseController {
     public String processRemoveCheeseForm(@RequestParam int[] cheeseIds) {
 
         for (int cheeseId : cheeseIds) {
-            cheeseDao.delete(cheeseId);
+            cheeseDAO.delete(cheeseId);
         }
 
         return "redirect:";

@@ -7,23 +7,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Category {
-
-    @OneToMany
-    @JoinColumn(name = "category_id")
-    private List<Cheese> cheeses = new ArrayList<>();
-
-    @GeneratedValue
+public class Menu {
     @Id
+    @GeneratedValue
     private int id;
 
     @NotNull
     @Size(min=3, max=15)
     private String name;
 
-    public Category() {}
+    @ManyToMany
+    private List<Cheese> cheeses;
 
-    public Category(String name) {
+    public Menu() {
+    }
+
+    public Menu(String name) {
         this.name = name;
     }
 
@@ -35,13 +34,13 @@ public class Category {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public List<Cheese> getCheeses() {
         return cheeses;
     }
 
 
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

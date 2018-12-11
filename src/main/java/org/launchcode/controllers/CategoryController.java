@@ -38,7 +38,30 @@ public class CategoryController {
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public String add(@ModelAttribute @Valid Category category,
                       Errors errors, Model model) {
+
+        if (errors.hasErrors()) {
+            model.addAttribute("title", "Add Category");
+            return "category/add";
+        }
+
         categoryDAO.save(category);
+        return "redirect:";
+    }
+
+    @RequestMapping(value = "remove", method = RequestMethod.GET)
+    public String displayRemoveCategoryForm(Model model) {
+        model.addAttribute("categories", categoryDAO.findAll());
+        model.addAttribute("title", "Remove Category");
+        return "category/remove";
+    }
+
+    @RequestMapping(value = "remove", method = RequestMethod.POST)
+    public String processRemoveCategoryForm(@RequestParam int[] categoryIds) {
+
+        for (int categoryId : categoryIds) {
+            categoryDAO.delete(categoryId);
+        }
+
         return "redirect:";
     }
 }
