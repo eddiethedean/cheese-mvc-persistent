@@ -10,8 +10,8 @@
 <form method="post">
 
     <div th:each="category : ${categories}" class="checkbox">
-        <input type="checkbox" name="categoryIds" th:value="${category.id}" th:id="${category.id}"/>
-        <label th:for="${category.id}" th:text="${category.name}"></label>
+        <input type="select" name="categoryIds" th:value="${category.id}" th:id="${category.id}"/>
+        <option th:for="${category.id}" th:text="${category.name}"></option>
         <br />
     </div>
 

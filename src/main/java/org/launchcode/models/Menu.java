@@ -22,8 +22,16 @@ public class Menu {
     public Menu() {
     }
 
+    public void removeItem(Cheese cheese) {
+        cheeses.remove(cheese);
+    }
+
     public Menu(String name) {
         this.name = name;
+    }
+
+    public void addItem(Cheese cheese) {
+        cheeses.add(cheese);
     }
 
     public int getId() {
